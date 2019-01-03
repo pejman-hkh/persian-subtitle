@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+	<meta charset="utf-8" />
+</head>
+<body>
+
+<h3>Paste here :</h3>
+<textarea cols="50" rows="20" id="Text"></textarea>
+<br />
+<br />
+<h3>Or browse it :</h3> 
+<input type="file" id="Browse" />
+<br />
+<br />
+
+<button><a style="text-decoration:none;color:#000;" href="" id="CorrectIt">Correct & Download It !</a>
+</button>
+
+<script>
+
+function outPut( link, data, name ) {
+    blob = new Blob([data], {type: "text/stream"}),
+    url = window.URL.createObjectURL(blob);
+  
+  	link.href = url;
+    link.target = '_blank';
+    link.download = typeof name === 'undefined' ?  'subtitle.srt' : name;	
+}
+
+var browseText;
+function readSingleFile(evt) {
+	var f = evt.target.files[0]; 
+
+	if (f) {
+		var r = new FileReader();
+		r.onload = function(e) { 
+			browseText = e.target.result;
+			browseName = f.name;
+		}
+
+		r.readAsText(f, 'ISO-8859-1');
+	} else { 
+		alert("Failed to load file");
+	}
+}
+document.getElementById('Browse').addEventListener('change', readSingleFile, false);
+document.getElementById('CorrectIt').onclick = function(event){
+	var textArea = document.getElementById('Text').value;
+	if( browseText ) {
+		var contents = CorrectStr( browseText );
+
+		outPut( this, contents, browseName );
+	} else if( textArea ) {
+		if( textArea == '' ) {
+			alert('Text required');
+			return;
+		}
+
+		var contents = CorrectStr( textArea );
+		outPut( this, contents );
+	} else {
+		alert('Please paste text or browse file');
+	}
+}
+
+String.prototype.replaceKeyPair = function(replace) {
+  var replaceString = this;
+  for (var x in replace ) {
+  	var regex = new RegExp(x, "g");
+    replaceString = replaceString.replace(regex, replace[x]);
+  }
+  return replaceString;
+};
+
+function CorrectStr( str ) {
+	var rep = {
+		'íö' : 'ئ',
+		'˜' : 'ک',
+		'' : 'ک',
+		'' : 'پ',
+		'Ì' : 'ج',
+		'' : 'چ',
+		'Ó' : 'س',
+		'á' : 'ل',
+		'Çð' : 'ا',
+		'Ç' : 'ا',
+		'ã' : 'م',
+		'Û' : 'غ',
+		'Ñ' : 'ر',
+		'' : ' ',
+		'í' : 'ی',
+		'È' : 'ب',
+		'å' : 'ه',
+		'Î' : 'خ',
+		'Ô' : 'ش',
+		'Ï' : 'د',
+		'Ó' : 'س',
+		'' : 'گ',
+		'æ' : 'و',
+		'Ê' : 'ت',
+		'ä' : 'ن',
+		'Ò' : 'ز',
+		'Â' : 'آ',
+		'Í' : 'ح',
+		'Þ' : 'ق',
+		'Ú' : 'ع',
+		'Ø' : 'ط',
+		'Ð' : 'ذ',
+		'¡' : '،',
+		'Ý' : 'ف',
+		'Ë' : 'ث',
+		'Õ' : 'ص',
+		'Ã' : 'أ',
+		'Æ' : 'ئ',
+		'Ù' : 'ظ',
+		'Ö' : 'ض',
+		'Á' : 'ء',
+		'º' : '؛',
+		'Ä' : 'ؤ',
+		'ú' : 'ْ',
+		'ñ' : 'ٌ',
+		'ö' : 'ِ',
+		'ó' : 'َ',		
+		'ò' : 'ٍ',
+		'ð' : 'ً',
+		'õ' : 'ُ',
+		'ø' : 'ّ ',
+		'í' : 'ي',     
+		'Å' : 'إ',     
+		'Ã' : 'أ',     
+		'Â' : 'آ',     
+		'É' : 'ة',
+		'Ž' : 'ژ',
+		'ß' : 'ك',
+	};
+
+	return str.replaceKeyPair( rep );
+}
+</script>
+</body>
+</html>
+
